@@ -1,0 +1,19 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    ffi (1.0.11)
+    ffi-locale (1.0.1)
+      ffi (>= 1.0.9)
+    ffi-ncurses (0.4.0)
+      ffi (>= 1.0.9)
+      ffi-locale (>= 1.0.0)
+    rbcurse (1.5.0)
+      rbcurse-core (>= 0.0)
+    rbcurse-core (0.0.3)
+      ffi-ncurses (>= 0.4.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  rbcurse
