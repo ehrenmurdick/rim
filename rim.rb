@@ -7,14 +7,14 @@ Log = Logger.new('dev.log')
 
 
 class RimWindow
-  attr_accessor :mode, :screen, :form, :line, :commandStr, :lines, :column
+  attr_accessor :mode, :screen, :form, :line, :commandStr, :lines, :column, :filename
 
   module Command
     def self.q win
       exit
     end
 
-    def self.w win, name
+    def self.w win, name = nil
       win.save(name)
     end
     
@@ -114,17 +114,26 @@ class RimWindow
     Ncurses.mvprintw(34, 0, " "*120)
   end
 
-  def save path
-    File.open(path, 'w') do |f|
-      f.write(@lines.join)
+  def save path = nil
+    if path && !@filename
+      @filename = path
+    end
+    Log.warn @filename
+    File.open(path||@filename, 'w') do |f|
+      f.write(@lines.join("\n"))
     end
     set_modeline("wrote #{path}")
   end
 
   def edit path
     normal!
+    @filename = path
     set_modeline("editing #{path}")
-    @lines = File.readlines(path)
+    if File.exists?(path)
+      @lines = File.open(path, 'r').readlines
+    else
+      @lines = [""]
+    end
     draw_file
     @column = 4
     @line = 0
@@ -150,6 +159,7 @@ class RimWindow
   end
 
   def initialize(screen)
+    @filename = ""
     @commandStr = ""
     @line = 0
     @column = 4
